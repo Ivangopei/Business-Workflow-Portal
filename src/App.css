@@ -50,6 +50,15 @@ body {
   color: white;
 }
 
+.sidebar nav h4 {
+  margin: 28px 14px 8px;
+  color: #93c5fd;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 /* Main content */
 
 .main-content {
