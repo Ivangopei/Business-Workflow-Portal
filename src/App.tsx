@@ -1,49 +1,34 @@
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import Dashboard from './pages/Dashboard'
+import Clients from './pages/Clients'
+import Tasks from './pages/Tasks'
 import './App.css'
 
 function App() {
   return (
-    <div className="app">
+    <BrowserRouter>
+      <div className="app">
 
-      <aside className="sidebar">
-        <h1>Atlas</h1>
+        <aside className="sidebar">
+          <h1>Atlas</h1>
 
-        <nav>
-          <a href="#">Dashboard</a>
-          <a href="#">Clients</a>
-          <a href="#">Tasks</a>
-        </nav>
-      </aside>
+          <nav>
+            <Link to="/">Dashboard</Link>
+            <Link to="/clients">Clients</Link>
+            <Link to="/tasks">Tasks</Link>
+          </nav>
+        </aside>
 
-      <main className="main-content">
+        <main className="main-content">
+          <Routes>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/clients" element={<Clients />} />
+            <Route path="/tasks" element={<Tasks />} />
+          </Routes>
+        </main>
 
-        <section className="welcome">
-          <h2>Welcome, Ivan</h2>
-          <p>Your business workflow dashboard</p>
-        </section>
-
-        <section>
-          <h3>Today's Tasks</h3>
-          <p>Call ABC Manufacturing</p>
-          <p>Follow up with John</p>
-          <p>Review candidate applications</p>
-        </section>
-
-        <section>
-          <h3>Clients</h3>
-          <p>ABC Manufacturing - Active</p>
-          <p>XYZ Logistics - Waiting</p>
-          <p>Acme Construction - Active</p>
-        </section>
-
-        <section>
-          <h3>Waiting For</h3>
-          <p>John - Job positions - 2 days</p>
-          <p>ABC Manufacturing - Candidate feedback - 4 days</p>
-        </section>
-
-      </main>
-
-    </div>
+      </div>
+    </BrowserRouter>
   )
 }
 
