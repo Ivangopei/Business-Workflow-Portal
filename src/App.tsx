@@ -35,6 +35,20 @@ function App() {
         </aside>
 
         <main className="main-content">
+
+          <div className="top-bar">
+            <div className="search-bar">
+              <span>🔍</span>
+
+              <input
+                type="text"
+                placeholder="Search clients, contacts, tasks..."
+              />
+
+              <button>Search</button>
+            </div>
+          </div>
+
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/clients" element={<Clients />} />
@@ -45,6 +59,7 @@ function App() {
             <Route path="/activity" element={<Activity />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>
+
         </main>
 
       </div>
