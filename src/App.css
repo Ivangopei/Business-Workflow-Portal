@@ -301,3 +301,146 @@ button:hover {
   color: #64748b;
   font-size: 13px;
 }
+
+/* Projects */
+
+.projects-page {
+  width: 100%;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.project-card {
+  padding: 22px;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(15, 23, 42, 0.05);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.project-card:hover {
+  border-color: #60a5fa;
+  box-shadow: 0 4px 8px rgba(15, 23, 42, 0.08);
+}
+
+.project-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.project-card-header h3 {
+  margin: 0 0 6px;
+  color: #172033;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.project-card-header p {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.project-status {
+  padding: 5px 9px;
+  border-radius: 999px;
+  background-color: #dbeafe;
+  color: #1d4ed8;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.project-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.project-stats > div {
+  padding: 12px;
+  background-color: #f1f5f9;
+  border-radius: 8px;
+}
+
+.project-stat-number {
+  display: block;
+  margin-bottom: 4px;
+  color: #172033;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.project-stat-label {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.project-progress {
+  margin-bottom: 22px;
+}
+
+.project-progress-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  background-color: #e2e8f0;
+  border-radius: 999px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: #2563eb;
+  border-radius: 999px;
+}
+
+.project-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.project-card-footer > span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.view-project-button {
+  padding: 7px 12px;
+  background-color: transparent;
+  border: 1px solid #cbd5e1;
+  color: #2563eb;
+  font-size: 13px;
+}
+
+.view-project-button:hover {
+  background-color: #dbeafe;
+  border-color: #93c5fd;
+}
+
+/* Responsive Design */
+
+@media (max-width: 900px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
