@@ -193,3 +193,111 @@ button:hover {
 .search-bar button:hover {
   background-color: #1d4ed8;
 }
+
+/* Contacts */
+
+.contacts-page {
+  width: 100%;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.page-description {
+  margin: 0;
+  color: #64748b;
+  font-size: 15px;
+}
+
+.page-header button {
+  padding: 10px 16px;
+}
+
+.contact-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.contact-filters input,
+.contact-filters select {
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background-color: #f8fafc;
+  color: #172033;
+  font-size: 14px;
+}
+
+.contact-filters input {
+  width: 320px;
+}
+
+.contact-filters select {
+  width: 180px;
+}
+
+.contact-filters input:focus,
+.contact-filters select:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+.contacts-table-container {
+  overflow-x: auto;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+}
+
+.contacts-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.contacts-table th {
+  padding: 14px 18px;
+  text-align: left;
+  background-color: #f1f5f9;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.contacts-table td {
+  padding: 16px 18px;
+  border-top: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 14px;
+}
+
+.contacts-table tbody tr:hover {
+  background-color: #f1f5f9;
+}
+
+.contact-name {
+  color: #172033;
+  font-weight: 600;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contact-info span:first-child {
+  color: #2563eb;
+}
+
+.contact-info span:last-child {
+  color: #64748b;
+  font-size: 13px;
+}
