@@ -38,7 +38,7 @@ function Clients() {
         <button>+ Add Client</button>
       </div>
 
-      <div className="clients-toolbar">
+      <div className="page-toolbar">
         <div className="status-tabs">
           <button className="status-tab active">All</button>
           <button className="status-tab">Active</button>
