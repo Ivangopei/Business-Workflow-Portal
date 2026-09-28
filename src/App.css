@@ -745,14 +745,6 @@ button:hover {
   width: 100%;
 }
 
-.clients-toolbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 20px;
-}
-
 .status-tabs {
   display: flex;
   gap: 4px;
@@ -781,18 +773,30 @@ button:hover {
   box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
 }
 
-.clients-toolbar input {
-  width: 280px;
-  height: 38px;
-  padding: 0 12px;
+.page-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.page-toolbar input {
+  width: 320px;
+  height: 40px;
+  padding: 0 14px;
   border: 1px solid #cbd5e1;
-  border-radius: 7px;
+  border-radius: 8px;
   background-color: #f8fafc;
   color: #172033;
   font-size: 14px;
 }
 
-.clients-toolbar input:focus {
+.page-toolbar input::placeholder {
+  color: #64748b;
+}
+
+.page-toolbar input:focus {
   outline: none;
   border-color: #60a5fa;
 }
@@ -868,4 +872,81 @@ button:hover {
 .status-onboarding {
   background-color: #e2e8f0;
   color: #475569;
+}
+
+/* Tasks */
+
+.tasks-page {
+  width: 100%;
+}
+
+.task-title {
+  color: #172033;
+  font-weight: 600;
+}
+
+.task-meta {
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.waiting-on {
+  margin-top: 5px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.status-todo {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+.status-in-progress {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-done {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+/* Priority: a small colored dot before the label */
+
+.priority {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.priority::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.priority-high::before {
+  background-color: #dc2626;
+}
+
+.priority-medium::before {
+  background-color: #d97706;
+}
+
+.priority-low::before {
+  background-color: #94a3b8;
+}
+
+.due-overdue {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* Completed tasks fade out */
+
+.task-done .task-title {
+  color: #94a3b8;
+  text-decoration: line-through;
 }
