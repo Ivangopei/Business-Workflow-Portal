@@ -228,7 +228,7 @@ function Dashboard() {
                 className="activity-row"
                 key={activity.text}
               >
-                <div className="activity-dot"></div>
+                <div className="dashboard-activity-dot"></div>
 
                 <div className="activity-content">
                   <span className="activity-text">
