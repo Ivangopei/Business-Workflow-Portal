@@ -950,3 +950,116 @@ button:hover {
   color: #94a3b8;
   text-decoration: line-through;
 }
+
+/* Follow-ups */
+
+.followups-page {
+  width: 100%;
+}
+
+.followup-group {
+  margin-bottom: 28px;
+}
+
+.followup-group-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px;
+  color: #172033;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.followup-count {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background-color: #e2e8f0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.group-overdue .followup-group-title {
+  color: #dc2626;
+}
+
+.group-overdue .followup-count {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.followup-list {
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.followup-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 170px auto;
+  align-items: center;
+  gap: 18px;
+  padding: 16px 18px;
+}
+
+.followup-row + .followup-row {
+  border-top: 1px solid #e2e8f0;
+}
+
+.followup-row:hover {
+  background-color: #f1f5f9;
+}
+
+.method-pill {
+  justify-self: start;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background-color: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.followup-subject {
+  color: #172033;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.followup-person {
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.followup-due {
+  color: #172033;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.group-overdue .followup-due {
+  color: #dc2626;
+}
+
+.followup-last {
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.secondary-button {
+  padding: 7px 12px;
+  background-color: transparent;
+  border: 1px solid #cbd5e1;
+  color: #2563eb;
+  font-size: 13px;
+}
+
+.secondary-button:hover {
+  background-color: #dbeafe;
+  border-color: #93c5fd;
+}
