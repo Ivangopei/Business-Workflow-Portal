@@ -1162,3 +1162,159 @@ button:hover {
   font-size: 13px;
   white-space: nowrap;
 }
+
+/* Settings */
+
+.settings-page {
+  width: 100%;
+  max-width: 960px;
+}
+
+.settings-card {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 32px;
+  margin-bottom: 20px;
+  padding: 24px;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+}
+
+.settings-card-info h3 {
+  margin: 0 0 6px;
+  color: #172033;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.settings-card-info p {
+  margin: 0;
+  color: #64748b;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.settings-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Form fields (reusable for future forms) */
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-field label {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-field input,
+.form-field select {
+  height: 40px;
+  max-width: 400px;
+  padding: 0 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 7px;
+  background-color: #ffffff;
+  color: #172033;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.form-field input:focus,
+.form-field select:focus {
+  outline: none;
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px #dbeafe;
+}
+
+.form-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #475569;
+  font-size: 14px;
+}
+
+.form-inline input {
+  width: 130px;
+}
+
+.form-inline .input-short {
+  width: 80px;
+}
+
+/* Toggle switches */
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  cursor: pointer;
+}
+
+.toggle-title {
+  display: block;
+  color: #172033;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.toggle-description {
+  display: block;
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.toggle {
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 22px;
+  margin: 0;
+  border-radius: 999px;
+  background-color: #cbd5e1;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #ffffff;
+  transition: transform 0.2s;
+}
+
+.toggle:checked {
+  background-color: #2563eb;
+}
+
+.toggle:checked::after {
+  transform: translateX(18px);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
