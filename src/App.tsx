@@ -8,23 +8,27 @@ import Contacts from './pages/Contacts'
 import Activity from './pages/Activity'
 import Settings from './pages/Settings'
 import './App.css'
+import LanguageSwitcher from './components/LanguageSwitcher'
+import { useTranslation } from 'react-i18next'
 
 
 function TopBar() {
   const location = useLocation()
+  const { t } = useTranslation()
 
-  const pageNames: Record<string, string> = {
-    '/': 'Dashboard',
-    '/clients': 'Clients',
-    '/tasks': 'Tasks',
-    '/follow-ups': 'Follow-ups',
-    '/projects': 'Projects',
-    '/contacts': 'Contacts',
-    '/activity': 'Activity',
-    '/settings': 'Settings',
+  const pageKeys: Record<string, string> = {
+    '/': 'nav.dashboard',
+    '/clients': 'nav.clients',
+    '/tasks': 'nav.tasks',
+    '/follow-ups': 'nav.followUps',
+    '/projects': 'nav.projects',
+    '/contacts': 'nav.contacts',
+    '/activity': 'nav.activity',
+    '/settings': 'nav.settings',
   }
 
-  const pageName = pageNames[location.pathname] || 'Atlas'
+  const pageKey = pageKeys[location.pathname]
+  const pageName = pageKey ? t(pageKey) : 'Atlas'
 
   return (
     <div className="top-bar">
@@ -35,10 +39,10 @@ function TopBar() {
 
         <input
           type="text"
-          placeholder="Search clients, contacts, tasks..."
+          placeholder={t('topBar.searchPlaceholder')}
         />
 
-        <button>Search</button>
+        <button>{t('topBar.search')}</button>
       </div>
     </div>
   )
@@ -46,6 +50,8 @@ function TopBar() {
 
 
 function App() {
+  const { t } = useTranslation()
+
   return (
     <BrowserRouter>
       <div className="app">
@@ -54,25 +60,26 @@ function App() {
           <h1>Atlas</h1>
 
           <nav>
-            <h4>Main</h4>
+            <h4>{t('nav.main')}</h4>
 
-            <Link to="/">Dashboard</Link>
-            <Link to="/clients">Clients</Link>
-            <Link to="/tasks">Tasks</Link>
-            <Link to="/follow-ups">Follow-ups</Link>
+            <Link to="/">{t('nav.dashboard')}</Link>
+            <Link to="/clients">{t('nav.clients')}</Link>
+            <Link to="/tasks">{t('nav.tasks')}</Link>
+            <Link to="/follow-ups">{t('nav.followUps')}</Link>
 
-            <h4>Work</h4>
+            <h4>{t('nav.work')}</h4>
 
-            <Link to="/projects">Projects</Link>
-            <Link to="/contacts">Contacts</Link>
+            <Link to="/projects">{t('nav.projects')}</Link>
+            <Link to="/contacts">{t('nav.contacts')}</Link>
 
-            <h4>Other</h4>
+            <h4>{t('nav.other')}</h4>
 
-            <Link to="/activity">Activity</Link>
-            <Link to="/settings">Settings</Link>
+            <Link to="/activity">{t('nav.activity')}</Link>
+            <Link to="/settings">{t('nav.settings')}</Link>
           </nav>
-        </aside>
 
+          <LanguageSwitcher />
+        </aside>
 
         <main className="main-content">
 

@@ -1,3 +1,4 @@
+
 type ClientStatus = 'active' | 'waiting' | 'onboarding'
 
 type Client = {

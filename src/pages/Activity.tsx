@@ -1,3 +1,4 @@
+
 type ActivityType = 'task' | 'follow-up' | 'client' | 'contact' | 'project' | 'note'
 type ActivityDay = 'today' | 'yesterday' | 'earlier'
 

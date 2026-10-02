@@ -1,3 +1,4 @@
+
 type FollowUpMethod = 'call' | 'email' | 'meeting'
 type FollowUpGroup = 'overdue' | 'today' | 'this-week' | 'later'
 

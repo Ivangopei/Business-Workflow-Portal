@@ -1,4 +1,8 @@
+import { useTranslation } from 'react-i18next'
+
 function Settings() {
+  const { t, i18n } = useTranslation()
+
   return (
     <div className="settings-page">
 
@@ -31,6 +35,27 @@ function Settings() {
               <option value="owner">Owner</option>
               <option value="admin">Admin</option>
               <option value="member">Member</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section className="settings-card">
+        <div className="settings-card-info">
+          <h3>{t('settings.language.title')}</h3>
+          <p>{t('settings.language.description')}</p>
+        </div>
+
+        <div className="settings-fields">
+          <div className="form-field">
+            <label htmlFor="language">{t('settings.language.label')}</label>
+            <select
+              id="language"
+              value={i18n.resolvedLanguage}
+              onChange={(event) => i18n.changeLanguage(event.target.value)}
+            >
+              <option value="en">English</option>
+              <option value="ru">Русский</option>
             </select>
           </div>
         </div>

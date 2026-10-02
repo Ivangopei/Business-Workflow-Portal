@@ -27,6 +27,8 @@ body {
   padding: 28px 20px;
   background-color: #172554;
   color: white;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar h1 {
@@ -1329,4 +1331,36 @@ button:hover {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+}
+
+/* Language switcher */
+
+.language-switch {
+  display: flex;
+  gap: 4px;
+  margin-top: auto;
+  padding: 4px;
+  border: 1px solid #1e3a8a;
+  border-radius: 8px;
+  align-self: flex-start;
+}
+
+.language-switch button {
+  padding: 6px 12px;
+  background-color: transparent;
+  color: #93c5fd;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+}
+
+.language-switch button:hover {
+  background-color: #1e3a8a;
+  color: white;
+}
+
+.language-switch button.active {
+  background-color: #2563eb;
+  color: white;
 }

@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 type TaskStatus = 'todo' | 'in-progress' | 'waiting' | 'done'
 type TaskPriority = 'high' | 'medium' | 'low'
 
@@ -43,37 +45,39 @@ const priorityLabels: Record<TaskPriority, string> = {
 }
 
 function Tasks() {
+  const { t } = useTranslation()
+
   return (
     <div className="tasks-page">
 
       <div className="page-header">
         <p className="page-description">
-          Everything that needs to get done, across all clients.
+          {t('tasks.description')}
         </p>
 
-        <button>+ New Task</button>
+        <button>{t('tasks.newTask')}</button>
       </div>
 
       <div className="page-toolbar">
         <div className="status-tabs">
-          <button className="status-tab active">All</button>
-          <button className="status-tab">To do</button>
-          <button className="status-tab">In progress</button>
-          <button className="status-tab">Waiting on</button>
-          <button className="status-tab">Done</button>
+          <button className="status-tab active">{t('tasks.all')}</button>
+          <button className="status-tab">{t('tasks.status.todo')}</button>
+          <button className="status-tab">{t('tasks.status.in-progress')}</button>
+          <button className="status-tab">{t('tasks.status.waiting')}</button>
+          <button className="status-tab">{t('tasks.status.done')}</button>
         </div>
 
-        <input type="text" placeholder="Search tasks..." />
+        <input type="text" placeholder={t('tasks.searchPlaceholder')} />
       </div>
 
       <div className="table-card">
         <table className="data-table">
           <thead>
             <tr>
-              <th>Task</th>
-              <th>Status</th>
-              <th>Priority</th>
-              <th>Due</th>
+              <th>{t('tasks.columns.task')}</th>
+              <th>{t('tasks.columns.status')}</th>
+              <th>{t('tasks.columns.priority')}</th>
+              <th>{t('tasks.columns.due')}</th>
             </tr>
           </thead>
 
@@ -92,7 +96,7 @@ function Tasks() {
 
                 <td>
                   <span className={`status-badge status-${task.status}`}>
-                    {statusLabels[task.status]}
+                    {t(`tasks.status.${task.status}`)}
                   </span>
 
                   {task.waitingOn && (
@@ -102,12 +106,12 @@ function Tasks() {
 
                 <td>
                   <span className={`priority priority-${task.priority}`}>
-                    {priorityLabels[task.priority]}
+                    {t(`tasks.priority.${task.priority}`)}
                   </span>
                 </td>
 
                 <td className={task.overdue ? 'due-overdue' : ''}>
-                  {task.overdue ? `Overdue, ${task.due}` : task.due}
+                  {task.overdue ? t('tasks.overdue', { date: task.due }) : task.due}
                 </td>
               </tr>
             ))}
