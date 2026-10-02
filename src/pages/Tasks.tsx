@@ -31,19 +31,6 @@ const tasks: Task[] = [
   { id: 13, title: 'Update hiring timeline', client: 'Global Foods', project: 'Global Foods Expansion', status: 'todo', priority: 'low', due: 'Oct 6' },
 ]
 
-const statusLabels: Record<TaskStatus, string> = {
-  todo: 'To do',
-  'in-progress': 'In progress',
-  waiting: 'Waiting on',
-  done: 'Done',
-}
-
-const priorityLabels: Record<TaskPriority, string> = {
-  high: 'High',
-  medium: 'Medium',
-  low: 'Low',
-}
-
 function Tasks() {
   const { t } = useTranslation()
 
