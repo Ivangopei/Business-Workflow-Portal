@@ -1524,3 +1524,74 @@ button:hover {
 .read-link:hover {
   text-decoration: underline;
 }
+
+.tab-count {
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background-color: #e2e8f0;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-tab.active .tab-count {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.toolbar-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toolbar-filters select {
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  color: #172033;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.toolbar-filters select:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+.page-toolbar .toolbar-filters input {
+  width: 220px;
+}
+
+.program-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.program-tag {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.program-h2a {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.program-h2b {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.program-eb3 {
+  background-color: #ede9fe;
+  color: #6d28d9;
+}
