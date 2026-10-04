@@ -1330,3 +1330,268 @@ button:hover {
   justify-content: flex-end;
   gap: 10px;
 }
+
+/* Documents */
+
+.documents-page {
+  width: 100%;
+}
+
+.document-name {
+  color: #172033;
+  font-weight: 600;
+}
+
+.document-category {
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.file-name {
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.file-size {
+  margin-top: 2px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.file-empty {
+  color: #94a3b8;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.status-received {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.status-missing {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.status-expiring {
+  background-color: #ffedd5;
+  color: #c2410c;
+}
+
+.document-group {
+  margin-bottom: 24px;
+}
+
+.document-group-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.document-group-header h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.document-group-count {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.document-group .data-table {
+  table-layout: fixed;
+}
+
+.document-group .data-table th:nth-child(1) { width: 28%; }
+.document-group .data-table th:nth-child(2) { width: 18%; }
+.document-group .data-table th:nth-child(3) { width: 26%; }
+.document-group .data-table th:nth-child(4) { width: 16%; }
+.document-group .data-table th:nth-child(5) { width: 12%; }
+
+/* News */
+
+.news-page {
+  width: 100%;
+  max-width: 960px;
+}
+
+.sample-note {
+  margin: 0 0 16px;
+  padding: 10px 14px;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  background-color: #eff6ff;
+  color: #1e40af;
+  font-size: 13px;
+}
+
+.news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.news-card {
+  padding: 18px 22px;
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+}
+
+.news-card:hover {
+  border-color: #93c5fd;
+}
+
+.news-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.topic-pill {
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.topic-immigration { background-color: #dbeafe; color: #1d4ed8; }
+.topic-labor { background-color: #e0e7ff; color: #4338ca; }
+.topic-hiring { background-color: #dcfce7; color: #15803d; }
+.topic-compliance { background-color: #ffedd5; color: #c2410c; }
+
+.news-title {
+  margin: 10px 0 6px;
+  color: #172033;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.news-summary {
+  margin: 0;
+  color: #475569;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.news-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.news-relevant {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.news-relevant-label {
+  margin-right: 2px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.client-chip {
+  padding: 3px 8px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.read-link {
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.read-link:hover {
+  text-decoration: underline;
+}
+
+.tab-count {
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background-color: #e2e8f0;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.status-tab.active .tab-count {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.toolbar-filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.toolbar-filters select {
+  height: 40px;
+  padding: 0 10px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  background-color: #f8fafc;
+  color: #172033;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+.toolbar-filters select:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+.page-toolbar .toolbar-filters input {
+  width: 220px;
+}
+
+.program-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.program-tag {
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.program-h2a {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.program-h2b {
+  background-color: #dbeafe;
+  color: #1d4ed8;
+}
+
+.program-eb3 {
+  background-color: #ede9fe;
+  color: #6d28d9;
+}
