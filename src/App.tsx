@@ -3,6 +3,7 @@ import Dashboard from './pages/Dashboard'
 import Clients from './pages/Clients'
 import Tasks from './pages/Tasks'
 import FollowUps from './pages/FollowUps'
+import News from './pages/News'
 import Projects from './pages/Projects'
 import Contacts from './pages/Contacts'
 import Documents from './pages/Documents'
@@ -19,6 +20,7 @@ function TopBar() {
     '/clients': 'Clients',
     '/tasks': 'Tasks',
     '/follow-ups': 'Follow-ups',
+    '/news': 'News',
     '/projects': 'Projects',
     '/contacts': 'Contacts',
     '/activity': 'Activity',
@@ -61,7 +63,7 @@ function App() {
             <Link to="/clients">Clients</Link>
             <Link to="/tasks">Tasks</Link>
             <Link to="/follow-ups">Follow-ups</Link>
-
+            <Link to="/news">News</Link>
             <h4>Work</h4>
 
             <Link to="/projects">Projects</Link>
@@ -85,6 +87,7 @@ function App() {
             <Route path="/clients" element={<Clients />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/follow-ups" element={<FollowUps />} />
+            <Route path="/news" element={<News />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/documents" element={<Documents />} />
