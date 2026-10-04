@@ -5,6 +5,7 @@ import Tasks from './pages/Tasks'
 import FollowUps from './pages/FollowUps'
 import Projects from './pages/Projects'
 import Contacts from './pages/Contacts'
+import Documents from './pages/Documents'
 import Activity from './pages/Activity'
 import Settings from './pages/Settings'
 import './App.css'
@@ -65,6 +66,7 @@ function App() {
 
             <Link to="/projects">Projects</Link>
             <Link to="/contacts">Contacts</Link>
+            <Link to="/documents">Documents</Link>
 
             <h4>Other</h4>
 
@@ -85,6 +87,7 @@ function App() {
             <Route path="/follow-ups" element={<FollowUps />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/contacts" element={<Contacts />} />
+            <Route path="/documents" element={<Documents />} />
             <Route path="/activity" element={<Activity />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>

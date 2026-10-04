@@ -1330,3 +1330,86 @@ button:hover {
   justify-content: flex-end;
   gap: 10px;
 }
+
+/* Documents */
+
+.documents-page {
+  width: 100%;
+}
+
+.document-name {
+  color: #172033;
+  font-weight: 600;
+}
+
+.document-category {
+  margin-top: 3px;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.file-name {
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.file-size {
+  margin-top: 2px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.file-empty {
+  color: #94a3b8;
+  font-size: 13px;
+  font-style: italic;
+}
+
+.status-received {
+  background-color: #dcfce7;
+  color: #15803d;
+}
+
+.status-missing {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.status-expiring {
+  background-color: #ffedd5;
+  color: #c2410c;
+}
+
+.document-group {
+  margin-bottom: 24px;
+}
+
+.document-group-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.document-group-header h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.document-group-count {
+  color: #64748b;
+  font-size: 13px;
+}
+
+.document-group .data-table {
+  table-layout: fixed;
+}
+
+.document-group .data-table th:nth-child(1) { width: 28%; }
+.document-group .data-table th:nth-child(2) { width: 18%; }
+.document-group .data-table th:nth-child(3) { width: 26%; }
+.document-group .data-table th:nth-child(4) { width: 16%; }
+.document-group .data-table th:nth-child(5) { width: 12%; }
