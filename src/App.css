@@ -1595,3 +1595,146 @@ button:hover {
   background-color: #ede9fe;
   color: #6d28d9;
 }
+
+/* Modal */
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background-color: rgba(15, 23, 42, 0.45);
+}
+
+.modal {
+  width: 100%;
+  max-width: 520px;
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25);
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 17px;
+}
+
+.modal-close {
+  padding: 2px 10px;
+  background-color: transparent;
+  color: #64748b;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.modal-close:hover {
+  background-color: #e2e8f0;
+  color: #172033;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 20px 24px;
+  overflow-y: auto;
+}
+
+.modal-body .form-field input,
+.modal-body .form-field select {
+  max-width: none;
+}
+
+.form-label {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.type-toggle {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  align-self: flex-start;
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+}
+
+.type-toggle button {
+  padding: 7px 14px;
+  background-color: transparent;
+  color: #475569;
+  font-size: 13px;
+  border-radius: 6px;
+}
+
+.type-toggle button:hover {
+  background-color: #e2e8f0;
+}
+
+.type-toggle button.active {
+  background-color: #ffffff;
+  color: #1d4ed8;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.08);
+}
+
+.program-options {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.program-options legend {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 0;
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #172033;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.form-field .checkbox-option input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px;
+  border-top: 1px solid #e2e8f0;
+}
