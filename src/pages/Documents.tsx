@@ -1,3 +1,6 @@
+import { useState } from 'react'
+import type { ChangeEvent, FormEvent } from 'react'
+
 type DocumentStatus = 'received' | 'waiting' | 'missing' | 'expiring'
 
 type ClientDocument = {
@@ -8,10 +11,11 @@ type ClientDocument = {
   status: DocumentStatus
   fileName?: string
   fileSize?: string
+  fileUrl?: string // prototype only: a temporary link to a file picked in this session
   date: string
 }
 
-const documents: ClientDocument[] = [
+const initialDocuments: ClientDocument[] = [
   { id: 1, name: 'Service agreement', category: 'Contract', client: 'ABC Manufacturing', status: 'received', fileName: 'service-agreement-abc.pdf', fileSize: '240 KB', date: 'Uploaded Sep 12' },
   { id: 2, name: 'Signed job descriptions', category: 'Form', client: 'XYZ Logistics', status: 'waiting', date: 'Requested Sep 18' },
   { id: 3, name: 'Business license', category: 'License', client: 'Global Foods', status: 'expiring', fileName: 'business-license.pdf', fileSize: '180 KB', date: 'Expires Oct 15' },
@@ -31,11 +35,152 @@ const statusLabels: Record<DocumentStatus, string> = {
   expiring: 'Expiring soon',
 }
 
-// Every client name, each one only once:
-// ['ABC Manufacturing', 'XYZ Logistics', 'Global Foods', ...]
-const clientNames = [...new Set(documents.map((doc) => doc.client))]
+const categories = ['Contract', 'Form', 'License', 'Insurance', 'Tax', 'Report', 'ID', 'Other']
+
+// 245760 -> "240 KB"
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024 * 1024) {
+    return `${Math.max(1, Math.round(bytes / 1024))} KB`
+  }
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+}
+
+// Today's date as "Oct 22"
+function today(): string {
+  return new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+type AddDocumentModalProps = {
+  clientNames: string[]
+  nextId: number
+  onClose: () => void
+  onSave: (doc: ClientDocument) => void
+}
+
+function AddDocumentModal({ clientNames, nextId, onClose, onSave }: AddDocumentModalProps) {
+  const [file, setFile] = useState<File | null>(null)
+
+  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
+    setFile(event.target.files?.[0] ?? null)
+  }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+
+    const form = new FormData(event.currentTarget)
+
+    const newDocument: ClientDocument = {
+      id: nextId,
+      name: String(form.get('name')).trim(),
+      category: String(form.get('category')),
+      client: String(form.get('client')).trim(),
+      status: file ? 'received' : (form.get('status') as DocumentStatus),
+      fileName: file?.name,
+      fileSize: file ? formatFileSize(file.size) : undefined,
+      fileUrl: file ? URL.createObjectURL(file) : undefined,
+      date: file ? `Uploaded ${today()}` : `Requested ${today()}`,
+    }
+
+    onSave(newDocument)
+  }
+
+  return (
+    <div
+      className="modal-backdrop"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) onClose()
+      }}
+    >
+      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="add-document-title">
+        <div className="modal-header">
+          <h3 id="add-document-title">Add document</h3>
+          <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="modal-body">
+            <div className="form-field">
+              <label htmlFor="document-client">Client</label>
+              <input
+                id="document-client"
+                name="client"
+                type="text"
+                list="document-client-options"
+                placeholder="Start typing or pick a client"
+                required
+                autoFocus
+              />
+              <datalist id="document-client-options">
+                {clientNames.map((name) => (
+                  <option value={name} key={name} />
+                ))}
+              </datalist>
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="document-name">Document name</label>
+              <input id="document-name" name="name" type="text" placeholder="e.g. Signed job descriptions" required />
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="document-category">Category</label>
+              <select id="document-category" name="category" defaultValue="Contract">
+                {categories.map((category) => (
+                  <option value={category} key={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="form-field">
+              <label htmlFor="document-file">File (optional)</label>
+              <input
+                id="document-file"
+                type="file"
+                className="file-input"
+                accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png"
+                onChange={handleFileChange}
+              />
+              {file && (
+                <span className="file-picked">
+                  {file.name}, {formatFileSize(file.size)}
+                </span>
+              )}
+            </div>
+
+            {!file && (
+              <div className="form-field">
+                <label htmlFor="document-status">Status</label>
+                <select id="document-status" name="status" defaultValue="missing">
+                  <option value="missing">Missing</option>
+                  <option value="waiting">Waiting on client</option>
+                </select>
+              </div>
+            )}
+          </div>
+
+          <div className="modal-footer">
+            <button type="button" className="secondary-button" onClick={onClose}>Cancel</button>
+            <button type="submit">{file ? 'Upload document' : 'Add to checklist'}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  )
+}
 
 function Documents() {
+  const [documents, setDocuments] = useState<ClientDocument[]>(initialDocuments)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
+  // Every client name, each one only once:
+  // ['ABC Manufacturing', 'XYZ Logistics', 'Global Foods', ...]
+  const clientNames = [...new Set(documents.map((doc) => doc.client))]
+
+  function handleSave(newDocument: ClientDocument) {
+    setDocuments([...documents, newDocument])
+    setIsModalOpen(false)
+  }
+
   return (
     <div className="documents-page">
 
@@ -44,7 +189,7 @@ function Documents() {
           Paperwork for every client, and what's still missing.
         </p>
 
-        <button>+ Upload Document</button>
+        <button onClick={() => setIsModalOpen(true)}>+ Upload Document</button>
       </div>
 
       <div className="page-toolbar">
@@ -112,9 +257,20 @@ function Documents() {
                       <td>{doc.date}</td>
 
                       <td>
-                        <button className="secondary-button">
-                          {doc.fileName ? 'View' : 'Upload'}
-                        </button>
+                        {doc.fileUrl ? (
+                          <a
+                            className="secondary-button"
+                            href={doc.fileUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            View
+                          </a>
+                        ) : (
+                          <button className="secondary-button">
+                            {doc.fileName ? 'View' : 'Upload'}
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -124,6 +280,15 @@ function Documents() {
           </section>
         )
       })}
+
+      {isModalOpen && (
+        <AddDocumentModal
+          clientNames={clientNames}
+          nextId={Math.max(...documents.map((doc) => doc.id)) + 1}
+          onClose={() => setIsModalOpen(false)}
+          onSave={handleSave}
+        />
+      )}
 
     </div>
   )

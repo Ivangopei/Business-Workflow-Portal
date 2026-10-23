@@ -1414,6 +1414,26 @@ button:hover {
 .document-group .data-table th:nth-child(4) { width: 16%; }
 .document-group .data-table th:nth-child(5) { width: 12%; }
 
+.modal-body .form-field .file-input {
+  height: auto;
+  padding: 10px 12px;
+  border-style: dashed;
+  cursor: pointer;
+}
+
+.file-picked {
+  color: #15803d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+a.secondary-button {
+  display: inline-block;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
 /* News */
 
 .news-page {
