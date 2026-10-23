@@ -614,6 +614,12 @@ button:hover {
   font-weight: 600;
 }
 
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
 /* Follow-ups */
 
 .follow-up-row {
