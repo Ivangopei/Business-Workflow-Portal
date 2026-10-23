@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import {BrowserRouter, Routes, Route, Link, useLocation} from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import Clients from './pages/Clients'
@@ -5,6 +6,9 @@ import Tasks from './pages/Tasks'
 import FollowUps from './pages/FollowUps'
 import News from './pages/News'
 import Projects from './pages/Projects'
+import ProjectDetail from './pages/ProjectDetail'
+import { initialProjects } from './data/projects'
+import type { Project } from './data/projects'
 import Contacts from './pages/Contacts'
 import Documents from './pages/Documents'
 import Activity from './pages/Activity'
@@ -27,7 +31,12 @@ function TopBar() {
     '/settings': 'Settings',
   }
 
-  const pageName = pageNames[location.pathname] || 'Atlas'
+  let pageName = pageNames[location.pathname] || 'Atlas'
+
+  // /projects/3 isn't in the list above, but it's still part of Projects
+  if (location.pathname.startsWith('/projects/')) {
+    pageName = 'Projects'
+  }
 
   return (
     <div className="top-bar">
@@ -49,6 +58,14 @@ function TopBar() {
 
 
 function App() {
+  // Projects live here, above the routes, so the Projects page and the
+  // project detail page share the same list (and new projects survive navigating).
+  const [projects, setProjects] = useState<Project[]>(initialProjects)
+
+  function handleAddProject(newProject: Project) {
+    setProjects([...projects, newProject])
+  }
+
   return (
     <BrowserRouter>
       <div className="app">
@@ -88,7 +105,8 @@ function App() {
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/follow-ups" element={<FollowUps />} />
             <Route path="/news" element={<News />} />
-            <Route path="/projects" element={<Projects />} />
+            <Route path="/projects" element={<Projects projects={projects} onAddProject={handleAddProject} />} />
+            <Route path="/projects/:projectId" element={<ProjectDetail projects={projects} />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/documents" element={<Documents />} />
             <Route path="/activity" element={<Activity />} />

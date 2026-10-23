@@ -1,24 +1,7 @@
 import { useState } from 'react'
 import type { FormEvent } from 'react'
-
-type TaskStatus = 'todo' | 'in-progress' | 'waiting' | 'done'
-type TaskPriority = 'high' | 'medium' | 'low'
-
-type Task = {
-  id: number
-  title: string
-  client: string
-  project?: string
-  status: TaskStatus
-  priority: TaskPriority
-  due: string
-  overdue?: boolean
-  waitingOn?: string
-}
-
-const initialTasks: Task[] = [
-  /* your 13 tasks, unchanged */
-]
+import { initialTasks } from '../data/tasks'
+import type { Task, TaskStatus, TaskPriority } from '../data/tasks'
 
 const statusLabels: Record<TaskStatus, string> = {
   todo: 'To do',
