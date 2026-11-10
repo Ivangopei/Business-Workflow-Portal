@@ -1848,3 +1848,19 @@ a.view-project-button {
   font-size: 14px;
   text-align: center;
 }
+
+/* Clients table: fixed column widths, so columns stay put when the list is filtered */
+.clients-page .data-table {
+  table-layout: fixed;
+}
+
+.clients-page .data-table th:nth-child(1) { width: 29%; }
+.clients-page .data-table th:nth-child(2) { width: 14%; }
+.clients-page .data-table th:nth-child(3) { width: 20%; }
+.clients-page .data-table th:nth-child(4) { width: 15%; }
+.clients-page .data-table th:nth-child(5) { width: 10%; }
+.clients-page .data-table th:nth-child(6) { width: 12%; }
+
+.clients-page .data-table td {
+  overflow-wrap: anywhere;
+}

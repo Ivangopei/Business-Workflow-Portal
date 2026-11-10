@@ -168,6 +168,14 @@ function Clients() {
   const [clients, setClients] = useState<Client[]>(initialClients)
   const [isModalOpen, setIsModalOpen] = useState(false)
 
+  const [activeProgram, setActiveProgram] = useState<Program | 'all'>('all')
+
+  // The clients to show in the table, based on the selected tab
+  const visibleClients =
+    activeProgram === 'all'
+      ? clients
+      : clients.filter((client) => client.programs.includes(activeProgram))
+
   function handleSave(newClient: Client) {
     setClients([...clients, newClient])
     setIsModalOpen(false)
@@ -186,12 +194,19 @@ function Clients() {
 
       <div className="page-toolbar">
         <div className="status-tabs">
-          <button className="status-tab active">
+          <button
+            className={activeProgram === 'all' ? 'status-tab active' : 'status-tab'}
+            onClick={() => setActiveProgram('all')}
+          >
             All clients <span className="tab-count">{clients.length}</span>
           </button>
 
           {allPrograms.map((program) => (
-            <button className="status-tab" key={program}>
+            <button
+              className={activeProgram === program ? 'status-tab active' : 'status-tab'}
+              onClick={() => setActiveProgram(program)}
+              key={program}
+            >
               {programLabels[program]}{' '}
               <span className="tab-count">
                 {clients.filter((client) => client.programs.includes(program)).length}
@@ -232,7 +247,7 @@ function Clients() {
           </thead>
 
           <tbody>
-            {clients.map((client) => (
+            {visibleClients.map((client) => (
               <tr key={client.id}>
                 <td>
                   <div className="client-name">{client.name}</div>
