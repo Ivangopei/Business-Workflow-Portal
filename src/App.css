@@ -1848,3 +1848,25 @@ a.view-project-button {
   font-size: 14px;
   text-align: center;
 }
+
+/* Validation errors shown at the top of a form */
+.form-errors {
+  margin: 0 0 16px;
+  padding: 10px 14px 10px 30px;
+  border: 1px solid #f5c2c0;
+  border-radius: 8px;
+  background: #fdecea;
+  color: #b42318;
+  font-size: 14px;
+}
+
+.form-errors li + li {
+  margin-top: 4px;
+}
+
+/* Shown in a table when filters hide every row */
+.table-empty {
+  text-align: center;
+  color: #6b7280;
+  padding: 24px;
+}

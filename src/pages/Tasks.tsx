@@ -2,6 +2,8 @@ import { useState } from 'react'
 import type { FormEvent } from 'react'
 import { initialTasks } from '../data/tasks'
 import type { Task, TaskStatus, TaskPriority } from '../data/tasks'
+import { createTask, filterTasks } from '../services/taskService'
+import type { TaskFilter } from '../services/taskService'
 
 const statusLabels: Record<TaskStatus, string> = {
   todo: 'To do',
@@ -16,57 +18,53 @@ const priorityLabels: Record<TaskPriority, string> = {
   low: 'Low',
 }
 
-// "2026-10-25" (from a date input) -> a Date at local midnight.
-// new Date("2026-10-25") would be read as UTC and can land on the previous day.
-function parseDateInput(value: string): Date {
-  const [year, month, day] = value.split('-').map(Number)
-  return new Date(year, month - 1, day)
-}
+// The status tabs above the table. 'all' shows every task.
+const filterTabs: { value: TaskFilter; label: string }[] = [
+  { value: 'all', label: 'All' },
+  { value: 'todo', label: 'To do' },
+  { value: 'in-progress', label: 'In progress' },
+  { value: 'waiting', label: 'Waiting on' },
+  { value: 'done', label: 'Done' },
+]
 
 type AddTaskModalProps = {
   clientNames: string[]
   projectNames: string[]
-  nextId: number
+  existingTasks: Task[]
   onClose: () => void
   onSave: (task: Task) => void
 }
 
-function AddTaskModal({ clientNames, projectNames, nextId, onClose, onSave }: AddTaskModalProps) {
+// UI layer only: collects the form values and shows errors.
+// The rules for what makes a valid task live in services/taskService.ts.
+function AddTaskModal({ clientNames, projectNames, existingTasks, onClose, onSave }: AddTaskModalProps) {
   const [status, setStatus] = useState<TaskStatus>('todo')
+  const [errors, setErrors] = useState<string[]>([])
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const form = new FormData(event.currentTarget)
 
-    const project = String(form.get('project')).trim()
-    const dueValue = String(form.get('due'))
+    const result = createTask(
+      {
+        title: String(form.get('title') ?? ''),
+        client: String(form.get('client') ?? ''),
+        project: String(form.get('project') ?? ''),
+        status: status,
+        priority: form.get('priority') as TaskPriority,
+        due: String(form.get('due') ?? ''),
+        waitingOn: String(form.get('waitingOn') ?? ''),
+      },
+      existingTasks,
+    )
 
-    let due = 'No due date'
-    let overdue = false
-
-    if (dueValue) {
-      const dueDate = parseDateInput(dueValue)
-      const startOfToday = new Date()
-      startOfToday.setHours(0, 0, 0, 0)
-
-      due = dueDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
-      overdue = dueDate < startOfToday && status !== 'done'
+    if (!result.ok) {
+      setErrors(result.errors)
+      return
     }
 
-    const newTask: Task = {
-      id: nextId,
-      title: String(form.get('title')).trim(),
-      client: String(form.get('client')).trim(),
-      project: project || undefined,
-      status: status,
-      priority: form.get('priority') as TaskPriority,
-      due: due,
-      overdue: overdue,
-      waitingOn: status === 'waiting' ? String(form.get('waitingOn')).trim() : undefined,
-    }
-
-    onSave(newTask)
+    onSave(result.task)
   }
 
   return (
@@ -84,6 +82,14 @@ function AddTaskModal({ clientNames, projectNames, nextId, onClose, onSave }: Ad
 
         <form onSubmit={handleSubmit}>
           <div className="modal-body">
+            {errors.length > 0 && (
+              <ul className="form-errors" role="alert">
+                {errors.map((error) => (
+                  <li key={error}>{error}</li>
+                ))}
+              </ul>
+            )}
+
             <div className="form-field">
               <label htmlFor="task-title">Task</label>
               <input id="task-title" name="title" type="text" placeholder="e.g. Collect signed job offers" required autoFocus />
@@ -166,6 +172,10 @@ function AddTaskModal({ clientNames, projectNames, nextId, onClose, onSave }: Ad
 function Tasks() {
   const [tasks, setTasks] = useState<Task[]>(initialTasks)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [statusFilter, setStatusFilter] = useState<TaskFilter>('all')
+  const [search, setSearch] = useState('')
+
+  const visibleTasks = filterTasks(tasks, statusFilter, search)
 
   const clientNames = [...new Set(tasks.map((task) => task.client))]
   const projectNames = [...new Set(tasks.flatMap((task) => (task.project ? [task.project] : [])))]
@@ -188,14 +198,23 @@ function Tasks() {
 
       <div className="page-toolbar">
         <div className="status-tabs">
-          <button className="status-tab active">All</button>
-          <button className="status-tab">To do</button>
-          <button className="status-tab">In progress</button>
-          <button className="status-tab">Waiting on</button>
-          <button className="status-tab">Done</button>
+          {filterTabs.map((tab) => (
+            <button
+              key={tab.value}
+              className={`status-tab${statusFilter === tab.value ? ' active' : ''}`}
+              onClick={() => setStatusFilter(tab.value)}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
 
-        <input type="text" placeholder="Search tasks..." />
+        <input
+          type="text"
+          placeholder="Search tasks..."
+          value={search}
+          onChange={(event) => setSearch(event.target.value)}
+        />
       </div>
 
       <div className="table-card">
@@ -210,7 +229,13 @@ function Tasks() {
           </thead>
 
           <tbody>
-            {tasks.map((task) => (
+            {visibleTasks.length === 0 && (
+              <tr>
+                <td colSpan={4} className="table-empty">No tasks match these filters.</td>
+              </tr>
+            )}
+
+            {visibleTasks.map((task) => (
               <tr
                 key={task.id}
                 className={task.status === 'done' ? 'task-done' : ''}
@@ -251,7 +276,7 @@ function Tasks() {
         <AddTaskModal
           clientNames={clientNames}
           projectNames={projectNames}
-          nextId={Math.max(...tasks.map((task) => task.id)) + 1}
+          existingTasks={tasks}
           onClose={() => setIsModalOpen(false)}
           onSave={handleSave}
         />
