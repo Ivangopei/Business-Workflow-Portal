@@ -6,8 +6,8 @@ This repository is the **Sprint 1 MVP**: secure sign-in, plus a client list back
 
 | | |
 |---|---|
-| **Live app** | https://VERCEL_URL_HERE |
-| **API** | https://atlas-api.onrender.com/api/health |
+| **Live app** | https://atlas-pearl-five-58.vercel.app |
+| **API** | https://atlas-api-4303.onrender.com/api/health |
 | **Demo login** | `demo@atlas.test` / `AtlasDemo2026!` |
 | **Jira board** | https://ivangopei.atlassian.net/jira/software/projects/ATL/boards/4 |
 
@@ -207,7 +207,7 @@ Manual end-to-end testing was also done against a real PostgreSQL database and o
 | Part | Platform | How |
 |---|---|---|
 | Frontend | **Vercel** | Connected to this repo; every push to `main` builds with `npm run build` and deploys `dist/`. `vercel.json` forwards `/api/*` to Render and sends all other paths to `index.html`, so links like `/clients` work on refresh. |
-| API + database | **Render** | `render.yaml` is a Render Blueprint that creates the free PostgreSQL database and the FastAPI web service, wires `DATABASE_URL` in, and generates `JWT_SECRET`. Auto-deploys on every push to `main`. Tables and demo data are created on the first start. |
+| API + database | **Render** | A free PostgreSQL database and a free FastAPI web service (root `server/`, `pip install -r requirements.txt`, `uvicorn app.main:app --host 0.0.0.0 --port $PORT`) with `DATABASE_URL` and `JWT_SECRET` set as environment variables, never committed. Tables and demo data are created on the first start. `render.yaml` describes the same setup as a Render Blueprint, so it can be recreated in one step. |
 
 ## Troubleshooting
 
@@ -239,7 +239,7 @@ Manual end-to-end testing was also done against a real PostgreSQL database and o
 
 ## Git workflow
 
-Work is done on feature branches and merged into `main` through pull requests with a description of the change. `main` is always deployable, since both Vercel and Render deploy from it automatically.
+Work is done on feature branches and merged into `main` through pull requests with a description of the change. `main` is always deployable: Vercel deploys every push to `main`, and Render deploys the API from `main`.
 
 ## License
 
