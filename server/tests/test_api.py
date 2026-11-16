@@ -15,6 +15,7 @@ from fastapi.testclient import TestClient
 from app import main
 from app.db import DatabaseNotConfiguredError, get_database_url
 from app.routes import clients, tasks
+from app.security import get_current_user
 
 
 class FakeCursor:
@@ -45,8 +46,14 @@ class FakeConnection:
 
 
 @pytest.fixture
-def client():
-    return TestClient(main.app)
+def client(monkeypatch):
+    # Don't try to create tables on startup during tests.
+    monkeypatch.setenv("SKIP_DB_INIT", "1")
+    # Pretend a user is signed in, so these tests focus on the routes themselves.
+    # Sign-in itself is tested in test_auth.py.
+    main.app.dependency_overrides[get_current_user] = lambda: {"id": 1, "email": "demo@atlas.test"}
+    yield TestClient(main.app)
+    main.app.dependency_overrides.clear()
 
 
 def test_health_returns_ok(client):
