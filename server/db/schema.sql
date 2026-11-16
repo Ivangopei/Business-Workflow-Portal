@@ -1,5 +1,14 @@
 -- Delete tables and dependent objects if they exist, so I can re-create them from scratch with any new changes.
-DROP TABLE IF EXISTS documents, follow_ups, tasks, projects, contacts, clients CASCADE;
+DROP TABLE IF EXISTS documents, follow_ups, tasks, projects, client_programs, contacts, clients, users CASCADE;
+
+-- Users who can sign in (case managers). Passwords are stored only as bcrypt hashes.
+CREATE TABLE users (
+  id             INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email          TEXT NOT NULL UNIQUE,
+  name           TEXT NOT NULL,
+  password_hash  TEXT NOT NULL,
+  created_at     TIMESTAMPTZ NOT NULL DEFAULT now()
+);
 
 -- Clients tab
 CREATE TABLE clients (
@@ -28,6 +37,13 @@ CREATE TABLE contacts (
 -- Only one contact per client
 CREATE UNIQUE INDEX one_primary_contact_per_client
   ON contacts (client_id) WHERE is_primary;
+
+-- Which visa programs a client is in. A client can be in several at once (ATL-3).
+CREATE TABLE client_programs (
+  client_id  INTEGER NOT NULL REFERENCES clients(id) ON DELETE CASCADE,
+  program    TEXT NOT NULL CHECK (program IN ('h2a', 'h2b', 'eb3')),
+  PRIMARY KEY (client_id, program)
+);
 
 -- Projects tab
 CREATE TABLE projects (

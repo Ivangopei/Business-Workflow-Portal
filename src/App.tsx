@@ -13,6 +13,8 @@ import Contacts from './pages/Contacts'
 import Documents from './pages/Documents'
 import Activity from './pages/Activity'
 import Settings from './pages/Settings'
+import Login from './pages/Login'
+import { AuthProvider, useAuth } from './auth/AuthContext'
 import './App.css'
 
 
@@ -57,7 +59,10 @@ function TopBar() {
 }
 
 
-function App() {
+// The signed-in part of the app. Shown only after login (see App below).
+function Workspace() {
+  const { user, signOut } = useAuth()
+
   // Projects live here, above the routes, so the Projects page and the
   // project detail page share the same list (and new projects survive navigating).
   const [projects, setProjects] = useState<Project[]>(initialProjects)
@@ -92,6 +97,12 @@ function App() {
             <Link to="/activity">Activity</Link>
             <Link to="/settings">Settings</Link>
           </nav>
+
+          <div className="sidebar-user">
+            <div className="sidebar-user-name">{user?.name}</div>
+            <div className="sidebar-user-email">{user?.email}</div>
+            <button className="sign-out-button" onClick={signOut}>Sign out</button>
+          </div>
         </aside>
 
 
@@ -117,6 +128,25 @@ function App() {
 
       </div>
     </BrowserRouter>
+  )
+}
+
+// ATL-1: nothing in the workspace is reachable without signing in.
+function AuthGate() {
+  const { user, checking } = useAuth()
+
+  if (checking) {
+    return <div className="login-page"><p className="login-subtitle">Loading…</p></div>
+  }
+
+  return user ? <Workspace /> : <Login />
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AuthGate />
+    </AuthProvider>
   )
 }
 

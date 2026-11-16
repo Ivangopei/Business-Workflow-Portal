@@ -11,6 +11,17 @@ INSERT INTO clients (name, type, industry, location, status) VALUES
   ('Maria Lopez',        'individual', NULL,                'Dover, DE',       'waiting'),     -- 7
   ('Andrei Popescu',     'individual', NULL,                'Newark, DE',      'onboarding');  -- 8
 
+-- Programs each client is in (a client can be in more than one)
+INSERT INTO client_programs (client_id, program) VALUES
+  (1, 'h2b'), (1, 'eb3'),
+  (2, 'h2b'),
+  (3, 'h2a'), (3, 'h2b'),
+  (4, 'eb3'),
+  (5, 'h2b'),
+  (6, 'h2a'),
+  (7, 'eb3'),
+  (8, 'eb3');
+
 INSERT INTO contacts (client_id, name, role, email, phone, is_primary, last_contacted_on) VALUES
   (1, 'John Smith',     'HR Manager',         'john@abcmanufacturing.com',   '(555) 123-4567', true, CURRENT_DATE - 2),   -- 1
   (2, 'Sarah Miller',   'Recruiter',          'sarah@xyzlogistics.com',      '(555) 234-5678', true, CURRENT_DATE - 9),   -- 2
@@ -76,3 +87,7 @@ INSERT INTO documents (client_id, name, category, status, file_name, file_size_b
   (5, 'Service agreement',          'Contract',  'missing',  NULL, NULL, CURRENT_DATE - 25, NULL, NULL),
   (5, 'W-9 tax form',               'Tax',       'missing',  NULL, NULL, CURRENT_DATE - 25, NULL, NULL),
   (7, 'Work experience letters',    'Form',      'waiting',  NULL, NULL, CURRENT_DATE - 5,  NULL, NULL);
+-- Demo sign-in for testing the deployed app: demo@atlas.test / AtlasDemo2026!
+-- Only the bcrypt hash is stored, never the password itself.
+INSERT INTO users (email, name, password_hash) VALUES
+  ('demo@atlas.test', 'Demo Case Manager', '$2b$12$QKphsSWmXFN183uWk5q0u.Re/wAFMKnHj8iY1H4dWZ7hrsSe1c/7e');

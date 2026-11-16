@@ -1,22 +1,72 @@
+"""Atlas API entry point.
+
+Architecture (layers, top to bottom):
+  routes/        HTTP layer: URLs, status codes, JSON in/out
+  schemas.py     Validation rules for incoming data (Pydantic models)
+  security.py    Password hashing, login tokens, and the sign-in guard
+  repositories.py / routes' SQL   Data layer: the only code that talks to PostgreSQL
+  db.py          Opens database connections from DATABASE_URL
+
+Design patterns used:
+  - Layered architecture (above): each layer only calls the one below it.
+  - Repository pattern (repositories.py): SQL is hidden behind plain functions.
+  - Dependency injection (FastAPI Depends): the sign-in guard `get_current_user`
+    is injected into routers, so protecting a route is one line, and tests can
+    replace it.
+"""
+
 import logging
+import os
+from contextlib import asynccontextmanager
 
 import psycopg
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.db import DatabaseNotConfiguredError, get_connection
-from app.routes import clients, contacts, documents, followups, projects, tasks
+from app.init_db import init_db
+from app.routes import auth, clients, contacts, documents, followups, projects, tasks
+from app.security import get_current_user
 
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("atlas")
 
-app = FastAPI(title="Atlas API")
 
-app.include_router(clients.router)
-app.include_router(contacts.router)
-app.include_router(projects.router)
-app.include_router(tasks.router)
-app.include_router(followups.router)
-app.include_router(documents.router)
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # On a fresh database (e.g. the first deploy), create the tables and dummy data.
+    # If the database isn't reachable yet, start anyway; /api/health/db will report it.
+    if os.getenv("DATABASE_URL") and os.getenv("SKIP_DB_INIT") != "1":
+        try:
+            if init_db():
+                logger.info("Fresh database: tables and seed data created.")
+        except Exception as exc:  # noqa: BLE001 - startup must not crash on DB problems
+            logger.error("Could not initialize the database: %s", exc)
+    yield
+
+
+app = FastAPI(title="Atlas API", lifespan=lifespan)
+
+# Only needed if the frontend calls the API from a different domain.
+# In production, Vercel forwards /api/* to this server, so requests are same-origin.
+allowed_origins = [o.strip() for o in os.getenv("CORS_ORIGINS", "").split(",") if o.strip()]
+if allowed_origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=allowed_origins,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+# Public routes: sign-in and health checks.
+app.include_router(auth.router)
+
+# Everything else requires a valid sign-in (ATL-1). No token -> 401.
+require_login = [Depends(get_current_user)]
+for router in (clients.router, contacts.router, projects.router, tasks.router,
+               followups.router, documents.router):
+    app.include_router(router, dependencies=require_login)
 
 
 # Error handling: if the database is down or not configured, every route would

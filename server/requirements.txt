@@ -1,4 +1,6 @@
-fastapi
-uvicorn[standard]
-psycopg[binary]
-python-dotenv
+fastapi==0.163.1
+uvicorn[standard]==0.54.0
+psycopg[binary]==3.3.9
+python-dotenv==1.2.4
+bcrypt==5.0.0
+PyJWT==2.15.1

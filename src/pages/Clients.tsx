@@ -1,35 +1,17 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
+import {
+  ALL_PROGRAMS,
+  countByProgram,
+  fetchClients,
+  filterClients,
+  saveClient,
+  validateClientInput,
+} from '../services/clientService'
+import type { Client, ClientFilters, ClientStatus, ClientType, Program } from '../services/clientService'
 
-type ClientType = 'business' | 'individual'
-type ClientStatus = 'active' | 'waiting' | 'onboarding'
-type Program = 'h2a' | 'h2b' | 'eb3'
-
-type Client = {
-  id: number
-  name: string
-  type: ClientType
-  industry?: string
-  location: string
-  primaryContact: string
-  status: ClientStatus
-  programs: Program[]
-  openTasks: number
-  lastActivity: string
-}
-
-const initialClients: Client[] = [
-  { id: 1, name: 'ABC Manufacturing', type: 'business', industry: 'Manufacturing', location: 'Wilmington, DE', primaryContact: 'John Smith', status: 'active', programs: ['h2b', 'eb3'], openTasks: 8, lastActivity: 'Today' },
-  { id: 2, name: 'XYZ Logistics', type: 'business', industry: 'Logistics', location: 'Dover, DE', primaryContact: 'Sarah Miller', status: 'waiting', programs: ['h2b'], openTasks: 3, lastActivity: '2 days ago' },
-  { id: 3, name: 'Global Foods', type: 'business', industry: 'Food processing', location: 'Newark, DE', primaryContact: 'Mike Johnson', status: 'active', programs: ['h2a', 'h2b'], openTasks: 6, lastActivity: 'Yesterday' },
-  { id: 4, name: 'Midwest Industries', type: 'business', industry: 'Industrial supply', location: 'Middletown, DE', primaryContact: 'Emily Davis', status: 'active', programs: ['eb3'], openTasks: 7, lastActivity: '3 days ago' },
-  { id: 5, name: 'Acme Construction', type: 'business', industry: 'Construction', location: 'Georgetown, DE', primaryContact: 'David Lee', status: 'onboarding', programs: ['h2b'], openTasks: 2, lastActivity: '1 week ago' },
-  { id: 6, name: 'Green Valley Farms', type: 'business', industry: 'Agriculture', location: 'Smyrna, DE', primaryContact: 'Tom Baker', status: 'active', programs: ['h2a'], openTasks: 4, lastActivity: '2 days ago' },
-  { id: 7, name: 'Maria Lopez', type: 'individual', location: 'Dover, DE', primaryContact: 'maria.lopez@email.com', status: 'waiting', programs: ['eb3'], openTasks: 2, lastActivity: 'Yesterday' },
-  { id: 8, name: 'Andrei Popescu', type: 'individual', location: 'Newark, DE', primaryContact: '(302) 555-0148', status: 'onboarding', programs: ['eb3'], openTasks: 1, lastActivity: '4 days ago' },
-]
-
-const allPrograms: Program[] = ['h2a', 'h2b', 'eb3']
+// UI layer for ATL-2 / ATL-3. Clients are loaded from and saved to the API;
+// validation and filtering live in services/clientService.ts.
 
 const programLabels: Record<Program, string> = {
   h2a: 'H-2A',
@@ -45,32 +27,44 @@ const statusLabels: Record<ClientStatus, string> = {
 
 type AddClientModalProps = {
   onClose: () => void
-  onSave: (client: Client) => void
-  nextId: number
+  onSaved: (client: Client) => void
 }
 
-function AddClientModal({ onClose, onSave, nextId }: AddClientModalProps) {
+function AddClientModal({ onClose, onSaved }: AddClientModalProps) {
   const [clientType, setClientType] = useState<ClientType>('business')
+  const [errors, setErrors] = useState<string[]>([])
+  const [saving, setSaving] = useState(false)
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
 
     const form = new FormData(event.currentTarget)
-
-    const newClient: Client = {
-      id: nextId,
-      name: String(form.get('name')).trim(),
+    const input = {
+      name: String(form.get('name') ?? ''),
       type: clientType,
-      industry: clientType === 'business' ? String(form.get('industry')).trim() : undefined,
-      location: String(form.get('location')).trim(),
-      primaryContact: String(form.get('contact')).trim(),
+      industry: String(form.get('industry') ?? ''),
+      location: String(form.get('location') ?? ''),
+      primaryContact: String(form.get('contact') ?? ''),
       status: form.get('status') as ClientStatus,
-      programs: form.getAll('programs') as Program[],
-      openTasks: 0,
-      lastActivity: 'Just now',
+      programs: form.getAll('programs').map(String),
     }
 
-    onSave(newClient)
+    const problems = validateClientInput(input)
+    if (problems.length > 0) {
+      setErrors(problems)
+      return
+    }
+
+    setSaving(true)
+    setErrors([])
+    try {
+      const saved = await saveClient(input)
+      onSaved(saved)
+    } catch (err) {
+      // e.g. server validation error, database down, or lost connection
+      setErrors([err instanceof Error ? err.message : 'Could not save the client.'])
+      setSaving(false)
+    }
   }
 
   return (
@@ -86,8 +80,16 @@ function AddClientModal({ onClose, onSave, nextId }: AddClientModalProps) {
           <button className="modal-close" onClick={onClose} aria-label="Close">×</button>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <div className="modal-body">
+            {errors.length > 0 && (
+              <ul className="form-errors" role="alert">
+                {errors.map((error) => (
+                  <li key={error}>{error}</li>
+                ))}
+              </ul>
+            )}
+
             <div className="form-field">
               <span className="form-label">Client type</span>
               <div className="type-toggle">
@@ -112,7 +114,7 @@ function AddClientModal({ onClose, onSave, nextId }: AddClientModalProps) {
               <label htmlFor="client-name">
                 {clientType === 'business' ? 'Company name' : 'Full name'}
               </label>
-              <input id="client-name" name="name" type="text" required autoFocus />
+              <input id="client-name" name="name" type="text" maxLength={200} autoFocus />
             </div>
 
             {clientType === 'business' && (
@@ -124,19 +126,19 @@ function AddClientModal({ onClose, onSave, nextId }: AddClientModalProps) {
 
             <div className="form-field">
               <label htmlFor="client-location">Location</label>
-              <input id="client-location" name="location" type="text" placeholder="City, State" required />
+              <input id="client-location" name="location" type="text" placeholder="City, State" />
             </div>
 
             <div className="form-field">
               <label htmlFor="client-contact">
                 {clientType === 'business' ? 'Primary contact' : 'Email or phone'}
               </label>
-              <input id="client-contact" name="contact" type="text" required />
+              <input id="client-contact" name="contact" type="text" />
             </div>
 
             <fieldset className="form-field program-options">
               <legend className="form-label">Programs</legend>
-              {allPrograms.map((program) => (
+              {ALL_PROGRAMS.map((program) => (
                 <label className="checkbox-option" key={program}>
                   <input type="checkbox" name="programs" value={program} />
                   {programLabels[program]}
@@ -156,7 +158,7 @@ function AddClientModal({ onClose, onSave, nextId }: AddClientModalProps) {
 
           <div className="modal-footer">
             <button type="button" className="secondary-button" onClick={onClose}>Cancel</button>
-            <button type="submit">Add client</button>
+            <button type="submit" disabled={saving}>{saving ? 'Saving…' : 'Add client'}</button>
           </div>
         </form>
       </div>
@@ -165,13 +167,48 @@ function AddClientModal({ onClose, onSave, nextId }: AddClientModalProps) {
 }
 
 function Clients() {
-  const [clients, setClients] = useState<Client[]>(initialClients)
+  const [clients, setClients] = useState<Client[]>([])
+  const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<string | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [filters, setFilters] = useState<ClientFilters>({
+    program: 'all',
+    status: 'all',
+    type: 'all',
+    search: '',
+  })
 
-  function handleSave(newClient: Client) {
-    setClients([...clients, newClient])
+  function requestClients() {
+    return fetchClients()
+      .then((list) => {
+        setClients(list)
+        setLoadError(null)
+      })
+      .catch((err: Error) => setLoadError(err.message))
+      .finally(() => setLoading(false))
+  }
+
+  // Load once when the page opens. (loading already starts as true.)
+  useEffect(() => {
+    requestClients()
+  }, [])
+
+  // "Try again" button after a failed load.
+  function retryLoad() {
+    setLoading(true)
+    setLoadError(null)
+    requestClients()
+  }
+
+  // ATL-2: a saved client shows up in the list right away, without reloading.
+  function handleSaved(newClient: Client) {
+    setClients((current) =>
+      [...current, newClient].sort((a, b) => a.name.localeCompare(b.name)),
+    )
     setIsModalOpen(false)
   }
+
+  const visibleClients = filterClients(clients, filters)
 
   return (
     <div className="clients-page">
@@ -186,37 +223,62 @@ function Clients() {
 
       <div className="page-toolbar">
         <div className="status-tabs">
-          <button className="status-tab active">
+          <button
+            className={`status-tab${filters.program === 'all' ? ' active' : ''}`}
+            onClick={() => setFilters({ ...filters, program: 'all' })}
+          >
             All clients <span className="tab-count">{clients.length}</span>
           </button>
 
-          {allPrograms.map((program) => (
-            <button className="status-tab" key={program}>
+          {ALL_PROGRAMS.map((program) => (
+            <button
+              className={`status-tab${filters.program === program ? ' active' : ''}`}
+              key={program}
+              onClick={() => setFilters({ ...filters, program })}
+            >
               {programLabels[program]}{' '}
-              <span className="tab-count">
-                {clients.filter((client) => client.programs.includes(program)).length}
-              </span>
+              <span className="tab-count">{countByProgram(clients, program)}</span>
             </button>
           ))}
         </div>
 
         <div className="toolbar-filters">
-          <select defaultValue="all" aria-label="Filter by status">
+          <select
+            value={filters.status}
+            onChange={(event) => setFilters({ ...filters, status: event.target.value as ClientFilters['status'] })}
+            aria-label="Filter by status"
+          >
             <option value="all">All statuses</option>
             <option value="active">Active</option>
             <option value="waiting">Waiting on client</option>
             <option value="onboarding">Onboarding</option>
           </select>
 
-          <select defaultValue="all" aria-label="Filter by client type">
+          <select
+            value={filters.type}
+            onChange={(event) => setFilters({ ...filters, type: event.target.value as ClientFilters['type'] })}
+            aria-label="Filter by client type"
+          >
             <option value="all">All types</option>
             <option value="business">Businesses</option>
             <option value="individual">Individuals</option>
           </select>
 
-          <input type="text" placeholder="Search clients..." />
+          <input
+            type="text"
+            placeholder="Search clients..."
+            value={filters.search}
+            onChange={(event) => setFilters({ ...filters, search: event.target.value })}
+          />
         </div>
       </div>
+
+      {loadError && (
+        <div className="load-error" role="alert">
+          <span>Couldn't load clients: {loadError}</span>
+          <button className="secondary-button" onClick={retryLoad}>Try again</button>
+        </div>
+      )}
 
       <div className="table-card">
         <table className="data-table">
@@ -227,24 +289,38 @@ function Clients() {
               <th>Primary contact</th>
               <th>Status</th>
               <th>Open tasks</th>
-              <th>Last activity</th>
             </tr>
           </thead>
 
           <tbody>
-            {clients.map((client) => (
+            {loading && (
+              <tr>
+                <td colSpan={5} className="table-empty">Loading clients…</td>
+              </tr>
+            )}
+
+            {!loading && !loadError && visibleClients.length === 0 && (
+              <tr>
+                <td colSpan={5} className="table-empty">
+                  {clients.length === 0 ? 'No clients yet. Add your first one.' : 'No clients match these filters.'}
+                </td>
+              </tr>
+            )}
+
+            {!loading && visibleClients.map((client) => (
               <tr key={client.id}>
                 <td>
                   <div className="client-name">{client.name}</div>
                   <div className="client-meta">
                     {client.type === 'business'
-                      ? `Business, ${client.industry ? client.industry + ', ' : ''}${client.location}`
-                      : `Individual, ${client.location}`}
+                      ? `Business${client.industry ? ', ' + client.industry : ''}${client.location ? ', ' + client.location : ''}`
+                      : `Individual${client.location ? ', ' + client.location : ''}`}
                   </div>
                 </td>
 
                 <td>
                   <div className="program-tags">
+                    {client.programs.length === 0 && <span className="client-meta">None</span>}
                     {client.programs.map((program) => (
                       <span className={`program-tag program-${program}`} key={program}>
                         {programLabels[program]}
@@ -262,7 +338,6 @@ function Clients() {
                 </td>
 
                 <td>{client.openTasks}</td>
-                <td>{client.lastActivity}</td>
               </tr>
             ))}
           </tbody>
@@ -271,9 +346,8 @@ function Clients() {
 
       {isModalOpen && (
         <AddClientModal
-          nextId={Math.max(...clients.map((client) => client.id)) + 1}
           onClose={() => setIsModalOpen(false)}
-          onSave={handleSave}
+          onSaved={handleSaved}
         />
       )}
 
